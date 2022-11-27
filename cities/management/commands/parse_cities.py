@@ -59,6 +59,7 @@ class Command(BaseCommand):
                 
 
                 print(cell_obj.value, end='|')
+            # end loop so construct city object
             city = City.objects.create(city=city,otherName=otherName,country=country,latitude=latitude,longitude=longitude,year=year,pop=pop,city_id=city_id)
             city.save()
             print(' saved ')

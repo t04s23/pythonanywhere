@@ -1,0 +1,24 @@
+<html><head>
+    <title>Historic Cities</title>
+    </head><body>
+        <h1>Historic Cities</h1>
+        {% for city in page_obj %}
+         <b> <a href={% url 'cityname' city=city.city %}>{{city.city }}</a></b>
+        This is {{ city.city }} also sometimes known as {{ city.otherName }} in 
+        {{city.country}}, with the {{ city.pop }} in {{ city.year }}, and located at 
+         {{ city.latitude }} and {{ city.longitude }}
+        </p>
+        {% endfor %}
+        
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </body></html>

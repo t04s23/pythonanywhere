@@ -17,3 +17,11 @@ class City(models.Model):
     def __str__(self):
         return f'{self.id}, {self.city}, {self.otherName}, {self.country}, {self.latitude},{self.longitude}, {self.year}, {self.pop}, {self.city_id}'
 
+    def cities():
+        cities = City.objects.all()
+        return cities
+    
+    def city_by_name(city):
+        city_list = City.objects.filter(city=city)
+        return city_list
+
