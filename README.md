@@ -1,18 +1,7 @@
-# historic_cities_django
-A Django application showing the growth and location of historical cities based on the Urban Spatial Data from 3700BC to 2000AD found at https://sedac.ciesin.columbia.edu/data/set/urbanspatial-hist-urban-pop-3700bc-ad2000, and is a copy of a version done in ruby at https://github.com/scharlau/historical_cities.
+# Creating an App of Historical City Data with Django
+This provides a simple Django application showing the growth and location of historical cities based on the Urban Spatial Data from 3700BC to 2000AD found at https://sedac.ciesin.columbia.edu/data/set/urbanspatial-hist-urban-pop-3700bc-ad2000, and is a copy of a version done in ruby at https://github.com/scharlau/historical_cities. 
 
-
-
-Use xlrd to parse excel sheet https://www.oreilly.com/library/view/data-wrangling-with/9781491948804/ch04.html - but this only reads xls files, so switched to https://openpyxl.readthedocs.io/en/stable/ which proved very fast for the 10k plus records.
-
-Use manage.py dbshell to confirm records are in the sqlite database.
-
-Given so many records, we need to use pagination: https://docs.djangoproject.com/en/4.1/topics/pagination/
-
-Things to try:
-1. organise cities by country
-2. Add chart showing population for each city.
-3. Add map showing location of each city.
+This is fine as a walk-through exercise in getting a database driven django site up and running. After that, it can be used for a number of other exercises noted further below.
 
 Step 1) We'll use location of historical cities based on the Urban Spatial Data from 3700BC to 2000AD found at https://sedac.ciesin.columbia.edu/data/set/urbanspatial-hist-urban-pop-3700bc-ad2000, which you can save to somewhere on your device. This gives us plenty of interesting things that we can do with the data.
 
@@ -35,7 +24,7 @@ We will use Django (https://www.djangoproject.com) as our web framework for the 
 
 And that will install django version 4.x (or newer) with its associated dependencies. We can now start to build the application.
 
-Now we can start to create the site using the django admin tools. Issue this command, and don't forget the '.' at the end of the line, which says 'create it in this directory'. This will create the admin part of our application, which will sit alongside the actual site. 
+Step 3) Now we can start to create the site using the django admin tools. Issue this command, and don't forget the '.' at the end of the line, which says 'create it in this directory'. This will create the admin part of our application, which will sit alongside the actual site. 
 
         django-admin startproject historic_cities .
 
@@ -62,7 +51,7 @@ If not, then look to the errors in the terminal. If you see one that says 'NameE
 
 ## Start the Server
 
-We so this using the manage.py command tool by entering this command in the terminal:
+Step 4) We so this using the manage.py command tool by entering this command in the terminal:
 
         python3 manage.py runserver
 
@@ -73,7 +62,7 @@ If you're doing this on another platform, then you might need to use this instea
 If it went well, then you should see the python rocket launching your site. 
 
 ## Modelling our Data
-The goal is to have the polar bear details on the website, which means we need to put the spreadsheet data into a database. This means creating models that map to tables in the database using Django's object relational mapping library.
+Step 5) The goal is to have the polar bear details on the website, which means we need to put the spreadsheet data into a database. This means creating models that map to tables in the database using Django's object relational mapping library.
 
 We can now set about creating the space for our polar bear content by running this command:
 
@@ -81,13 +70,13 @@ We can now set about creating the space for our polar bear content by running th
 
 This will create a new folder 'cities' containing relevant config files for us including space for database migrations, and other details specific to our content. 
 
-Inside the 'cities' folder create a new folder called 'city_data'. We can now take the downloaded city data and put the 'urbanspatial-hist-urban-pop-3700bc-ad2000-xlsx' file into the 'city_data' folder. We'll need this later when we load the data into the database.
+Step 6) Inside the 'cities' folder create a new folder called 'city_data'. We can now take the downloaded city data and put the 'urbanspatial-hist-urban-pop-3700bc-ad2000-xlsx' file into the 'city_data' folder. We'll need this later when we load the data into the database.
 
 We need to modify the settings.py file in the historic_cities app, so that it knows to include the 'cities' contents. We do this by adding a line in the section on 'INSTALLED_APPS'. Add this line to the end of the block ( plus the , at the end of the line above it).
 
         'cities',
 
-Now we can open 'cities/models.py' and start adding the schema for our tables. We'll start by adding a model for the cities. There is a lot of info in the spreadsheet file, but we'll only focus on the basic attributes. We label all of the attributes with a lower-case letter so that if (when) we move this to a different database, such as Postgresql, or MySQL, we don't have issues with columns starting with capital letters. Add the missing lines so that your file looks like this:
+Step 7) Now we can open 'cities/models.py' and start adding the schema for our tables. We'll start by adding a model for the cities. There is a lot of info in the spreadsheet file, but we'll only focus on the basic attributes. We label all of the attributes with a lower-case letter so that if (when) we move this to a different database, such as Postgresql, or MySQL, we don't have issues with columns starting with capital letters. Add the missing lines so that your file looks like this:
 
         from django.db import models
         from django.conf import settings
@@ -108,7 +97,7 @@ Now we can open 'cities/models.py' and start adding the schema for our tables. W
             def __str__(self):
                 return f'{self.id}, {self.city}, {self.otherName}, {self.country}, {self.latitude},{self.longitude}, {self.year}, {self.pop}, {self.city_id}'
 
-Now we nee to generate a migration file for Django to use when it loads the model into the schema. By having Django do this, it will generate the correct SQL needed for our database. The timestamp will be generated automatically for us for each new entry.
+Step 8) Now we nee to generate a migration file for Django to use when it loads the model into the schema. By having Django do this, it will generate the correct SQL needed for our database. The timestamp will be generated automatically for us for each new entry.
 
 First, we ask Django to generate the migration file with the command:
 
@@ -124,11 +113,11 @@ Second, we run the generated migration with the command:
 
 Now we have the migration done and the table is created in our database, and we can load our data into the database. We do this using Django's admin commands, which provide access to the models, and thus the database for us. See more here: https://docs.djangoproject.com/en/3.1/howto/custom-management-commands/ 
 
-Under the 'cities' app create a folder 'management' and inside that create another one named 'commands'. Then create a file parse_cities.py in that folder. We use the openpyxl library to parse the excel spreadsheet, so you need to install that with the command:
+Step 9) Under the 'cities' app create a folder 'management' and inside that create another one named 'commands'. Then create a file parse_cities.py in that folder. We use the openpyxl library to parse the excel spreadsheet, so you need to install that with the command:
 
         pip install openpyxl
 
-With that in place we can now use the city model to help us import the spreadsheet data. There are a few interesting points to note here:
+Step 10) With that in place we can now use the city model to help us import the spreadsheet data. There are a few interesting points to note here:
 a) we drop the table objects, so that we can run this repeatedly, and not duplicate entries.
 b) we use paths, and relative ones, so that we don't need to know where this application sits on the file system, but will always work.
 c) as the openpyxl library goes cell by cell, we need to iterate over each cell in a row and check its column name to know which cell we're parsing so that we can assign it the correct variable name in order to create a new 'city' to save in the database.
@@ -208,8 +197,24 @@ With this we can drop the data from the table, and then load it in, as required.
 
 This should run fine.
 
+Step 11) If you want to confirm the data is in the database, then you can use this command to open a shell to query the sqlite database:
+
+        python3 manage.py dbshell
+
+This will open the database, and you can use these commands to confirm all is there:
+
+        .tables
+
+Which should show you 'cities_city', and then you can run this query:
+
+        select * from cities_city where city='Tokyo';
+
+That should give you a number of entries back, and then you can leave the shell with the command:
+
+        .exit
+
 ## Creating Views
-We can now create views for our data so that we can see all of the bears, plus also have a page to view details about each individual one.
+Step 12) We can now create views for our data so that we can see all of the bears, plus also have a page to view details about each individual one.
 
 Open historic_cities/urls.py and add 'include' to the import list, and add the second line as well below the one for 'admin.site.urls':
 
@@ -219,7 +224,7 @@ Open historic_cities/urls.py and add 'include' to the import list, and add the s
 
 This tells our application to look for content in the 'cities' app. 
 
-Next go into the 'cities' folder and create an empty 'urls.py' file for us to manage the available views in the app. To start with put this into the file:
+Step 13) Next go into the 'cities' folder and create an empty 'urls.py' file for us to manage the available views in the app. To start with put this into the file:
 
         from django.urls import path
         from . import views
@@ -231,7 +236,9 @@ Next go into the 'cities' folder and create an empty 'urls.py' file for us to ma
 
 This provides us with the urls for two paths: one to show all of the cities, and another to show us the list of entries for a specific city name. The <str:city> part says the parameter called 'city' takes a string and then returns the view 'city_by_name', which we'll add in a moment.
 
-We can now open 'cities/views.py' to add the view methods to generate a list of cities.
+ As we have over 10,000 records in our database, we need to use pagination to make the site easier to use. You'll find more details about this at https://docs.djangoproject.com/en/4.1/topics/pagination/ We'll see this used in our views, and then later in the html file.
+
+Step 14) We can now open 'cities/views.py' to add the view methods to generate a list of cities.
 
         from django.core.paginator import Paginator
         from django.shortcuts import render
@@ -252,7 +259,7 @@ We can now open 'cities/views.py' to add the view methods to generate a list of 
             page_obj = paginator.get_page(page_number)
             return render(request, 'cities/city_list.html', {'page_obj': page_obj})
 
-Our two views reuse the same html file for simplicity. Both also rely upon methods in the City class, in order to keep more code tied to cities there, instead of putting it into the view. Add these two methods to the cities/models.py file:
+Step 15) Our two views reuse the same html file for simplicity. Both also rely upon methods in the City class, in order to keep more code tied to cities there, instead of putting it into the view. Add these two methods to the cities/models.py file:
 
         def cities():
             cities = City.objects.all()
@@ -262,11 +269,10 @@ Our two views reuse the same html file for simplicity. Both also rely upon metho
             city_list = City.objects.filter(city=city)
             return city_list
 
+Step 16) Next, we need to create the actual html page to display our cities. We'll put folders in the place that Django looks for them, which seems like extra work, but is convention, so go with it. You'll find your app, and others that you look at follow the convention, so you need to get used to it.
 
-
-Next, we need to create the actual html page to display our cities. We'll put folders in the place that Django looks for them, which seems like extra work, but is convention. 
-
-As before, create a 'templates' folder under 'cities' and then another 'cities' folder under that. Then create a file at 'cities/templates/cities/city_list.html' which has this simple code:
+As before, create a 'templates' folder under 'cities' and then another 'cities' folder under that.
+Then create a file at 'cities/templates/cities/city_list.html' which has this simple code:
        
        <html><head>
        <title>Historic Cities</title>
@@ -293,10 +299,9 @@ As before, create a 'templates' folder under 'cities' and then another 'cities' 
             {% endif %}
         </body></html>
  
-
 This will show the full list of cities, and includes pagination so that we don't try to show all 10K plus entries at once. 
 
-First, add a link to retrieve all entries for a city on the bear_list.html page around 'city' like this:
+First, the html adds a link to retrieve all entries for a city on the bear_list.html page around 'city' like this:
 
          <b> <a href="{% url 'cityname' city=city.city %}">{{ city.city }}</a></b>
 
@@ -310,8 +315,11 @@ This tells the view to expect a string as 'city' to be used in the query.
 
 Now you can reload the page, and you should be able to see the cities pages. 
 
-Finally, we're ready to do some more work with this so that we can add the sightings from the other table and show them on the bear detail page.
+Finally, we're ready to do some more work with this as suggested below.
 
-
+Things to try:
+1. organise cities by country
+2. Add chart showing population for each city.
+3. Add map showing location of each city.
 
 
