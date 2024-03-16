@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 Django settings for historic_cities project.
 
@@ -124,3 +125,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+=======
+>>>>>>> d373d43c5f4d9e2956a66cc19fd41edbcc2b80b4
