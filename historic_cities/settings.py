@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> a4988041533339fd427c27e39021906973431242
 """
 Django settings for historic_cities project.
 
@@ -29,11 +25,8 @@ SECRET_KEY = 'django-insecure-!n%atjc!ul-j^y71!$exc#3w*=_0+l^#w)=orz7*!p&a(z=@)_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-ALLOWED_HOSTS = ['localhost']
-=======
+
 ALLOWED_HOSTS = ['localhost','t04s232nd.pythonanywhere.com']
->>>>>>> a4988041533339fd427c27e39021906973431242
 
 
 # Application definition
@@ -131,10 +124,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< HEAD
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-=======
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-=======
->>>>>>> d373d43c5f4d9e2956a66cc19fd41edbcc2b80b4
->>>>>>> a4988041533339fd427c27e39021906973431242
